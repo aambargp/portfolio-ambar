@@ -733,6 +733,49 @@ transform:none;
 }
 
 </style>
+
+<style>
+/* =========================================
+   LANGUAGE SWITCHER
+========================================= */
+.language-switcher{
+    display:flex;
+    align-items:center;
+}
+
+#languageToggle{
+    margin:0;
+    padding:7px 12px;
+    border:1px solid rgba(90,70,52,.45);
+    border-radius:999px;
+    background:transparent;
+    color:var(--brown);
+    font-family:Inter,sans-serif;
+    font-size:.68rem;
+    font-weight:600;
+    letter-spacing:1.5px;
+    line-height:1;
+    transition:.3s;
+}
+
+#languageToggle:hover{
+    background:var(--brown);
+    color:white;
+    transform:none;
+}
+
+@media(max-width:600px){
+    .language-switcher{
+        margin-top:2px;
+    }
+
+    #languageToggle{
+        padding:6px 11px;
+        font-size:.62rem;
+    }
+}
+</style>
+
 <script>
 
 document.addEventListener("DOMContentLoaded",function(){
@@ -783,10 +826,13 @@ document.addEventListener("DOMContentLoaded",function(){
 
 <ul>
 
-<li><a href="#about">Sobre mí</a></li>
-<li><a href="#scripts">Guiones</a></li>
-<li><a href="#stories">Obra escrita</a></li>
-<li><a href="#skills">Habilidades</a></li>
+<li><a href="#about" data-i18n="nav.about">Sobre mí</a></li>
+<li><a href="#scripts" data-i18n="nav.scripts">Guiones</a></li>
+<li><a href="#stories" data-i18n="nav.written">Obra escrita</a></li>
+<li><a href="#skills" data-i18n="nav.skills">Habilidades</a></li>
+<li class="language-switcher">
+    <button type="button" id="languageToggle" aria-label="Switch language">EN</button>
+</li>
 
 </ul>
 
@@ -3290,25 +3336,31 @@ display:none;
 </style>
 <script>
 
-const text="Portfolio de Escritura";
+let typingTimer;
 
-let i=0;
+function startPortfolioTyping(lang){
 
-function typing(){
+    clearTimeout(typingTimer);
 
-if(i<text.length){
+    const el=document.getElementById("typing");
+    if(!el) return;
 
-document.getElementById("typing").innerHTML+=text.charAt(i);
+    const text=lang==="en" ? "Writing Portfolio" : "Portfolio de Escritura";
+    let i=0;
+    el.textContent="";
 
-i++;
+    function typing(){
+        if(i<text.length){
+            el.textContent+=text.charAt(i);
+            i++;
+            typingTimer=setTimeout(typing,80);
+        }
+    }
 
-setTimeout(typing,80);
-
+    typing();
 }
 
-}
-
-typing();
+startPortfolioTyping(localStorage.getItem("portfolioLanguage")==="en" ? "en" : "es");
 
 document.querySelectorAll(".card").forEach(card=>{
 
@@ -3398,5 +3450,342 @@ card.classList.contains("open")
 });
 });
 </script>
+
+<script>
+/* =========================================
+   BILINGUAL PORTFOLIO — ES / EN
+========================================= */
+(function(){
+    const translations = {
+        es: {
+            "nav.about":"Sobre mí",
+            "nav.scripts":"Guiones",
+            "nav.written":"Obra escrita",
+            "nav.skills":"Habilidades"
+        },
+        en: {
+            "nav.about":"About",
+            "nav.scripts":"Screenplays",
+            "nav.written":"Written Work",
+            "nav.skills":"Skills"
+        }
+    };
+
+    const projectTranslations = [
+        {
+            genre:"Drama · Psychological Thriller · Atmospheric Horror",
+            badge:"Feature Film", status:"In Development",
+            synopsis:"Amancio, a young nurse with a troubled past, travels to a remote town in the Altas Cumbres to care for Hilario, an emaciated elderly man living in an isolated stone house steeped in grief. As the days pass, Amancio becomes increasingly fascinated and consumed by Sandra, Hilario's deceased wife, whose memory dominates the house. After a violent storm blocks the road and leaves them trapped, Amancio's transformation accelerates, both physically and psychologically."
+        },
+        {
+            genre:"Urban Gothic Horror · Magical Realism",
+            badge:"Short Film", status:"Written Project",
+            synopsis:"Elvira hires Vito, a vain and arrogant young sex worker. The scene unfolds in the elderly woman's oppressive house during a candlelit dinner, with Elvira remaining hidden in the shadows. Vito behaves provocatively and superficially, attempting to control the interaction, but the atmosphere is unsettled by unmistakable signs of abandonment and extreme decay."
+        },
+        {
+            genre:"Tragic Drama · Psychological Thriller · Surrealist Horror",
+            badge:"Feature Film", status:"In Development",
+            synopsis:"During a purist theatrical production of Heracles, the rigorous director Silvana seeks to cement her career while ignoring strange anomalies onstage involving Gaspar, the lead actor, and the chorus's internal dramas. Gaspar has just committed an unforgivable act backstage and decides to perform while consumed by delusion and guilt. Confusing Greek tragedy with his own reality, his visceral performance dazzles the production, which believes it is witnessing artistic genius. The fiction collapses, however, when the trance ends."
+        },
+        {
+            genre:"Existential Drama · Magical Realism",
+            badge:"Short Film", status:"Written Project",
+            synopsis:"Casimiro, gravely ill with gangrene, visits the home of his former student Basilio to undergo a strange occult process that promises to free him from his physical condition. After the ceremony, Casimiro awakens feeling healthy and returns home to his wife, Morgana. Yet the reality around him is marked by sinister inconsistencies. Finally, after expelling black blood, the illusion breaks: his real body is revealed to be lying dead beneath a sheet in Basilio's house. Loosely adapted from Edgar Allan Poe's “The Facts in the Case of M. Valdemar.”"
+        },
+        {
+            genre:"Existential Drama", badge:"Short Film", status:"Available",
+            synopsis:"Irene collapses and falls into a parallel dimension: a dark, infinite room. There she finds a table occupied by three people—Paula, Valeria, and Juan—eating in absolute silence. Soon Pedro joins them, an enigmatic and dominant figure dressed in white who declares himself the guardian of the space. As time loses all meaning and the earthly memories of those present dissolve into the fog, acolytes begin to claim them.",
+            watch:"▶ Watch short film"
+        },
+        {
+            genre:"Dramatic Satire · Dark Comedy", badge:"Short Film", status:"Written Project",
+            synopsis:"During an ostentatious spring ceremony, Lucrecia and her mother Carmen discuss preparations for the wedding of Adela, an 11-year-old girl in the terminal stage of an illness. Rather than prioritizing the child's health or dignity, Lucrecia organizes a symbolic wedding designed to preserve appearances and present herself to the guests as a heroic mother. During a photo session, she notices that the girl's oxygen tube ruins the composition, adjusts her own dress to conceal it, and smiles for the camera."
+        },
+        {
+            genre:"Psychological Horror", badge:"Short Film", status:"Available",
+            synopsis:"Fátima is immersed in a profound depressive crisis after spending a long time unable to leave her home. A sudden physical and emotional collapse causes her to convulse in bed and lose her perception of space and time.",
+            watch:"▶ Watch short film"
+        },
+        {
+            genre:"Uncanny Realism", badge:"Short Film", status:"Written Project",
+            synopsis:"Antía visits her friends Manuela and Luciano at their new apartment for the first time. She notices the presence of a mysterious pale young woman dressed in white, silently walking through the house and sitting beside them on the couch without blinking or being acknowledged by the hosts. Adapted from “Estocolmo 3” by Amparo Dávila."
+        },
+        {
+            genre:"Suspense", badge:"Short Film", status:"Written Project",
+            synopsis:"A man settles into his armchair to immerse himself in a novel about a gangster romance. As he reads, the boundaries of fiction begin to disappear: in a remote cabin, a wounded man and his lover finalize the details of a meticulously planned crime. With a dagger in hand, the lover moves through a silent house following the exact instructions on a map, unaware that the fictional space and the reader's reality are about to collide in a loop. Adapted from “Continuidad de los Parques” by Julio Cortázar."
+        },
+        {
+            genre:"Domestic Horror", badge:"Short Film", status:"Written Project",
+            synopsis:"Eugenia is trapped in a toxic routine, struggling to maintain harmony at home while being ignored by her aggressive husband and her two emotionally withdrawn teenage children. As alienation and subtle abuse intensify, she becomes compulsively obsessed with cleanliness and order. The accumulated tension drives her into a progressive psychological collapse. After a manic night in which she paints the house and becomes immersed in the breakdown of her surroundings, she ends up completely alienated."
+        },
+        {
+            genre:"Domestic Drama", badge:"Short Film", status:"Written Project",
+            synopsis:"Dolores accompanies her friends to consult a prestigious local shell reader, but unlike the others, the woman dismisses her almost immediately. Confused, Dolores brushes the incident aside, packs her bag, and boards a long-distance bus to visit her parents before starting university. Hours later, her parents learn from the news of a tragic road accident with no survivors. The truth is finally revealed in the reading: the seer was stunned to find the shell pattern completely blank, revealing that the young woman's destiny had already been emptied."
+        }
+    ];
+
+    const writtenTranslations = [
+        {
+            subtitle:"Short Fiction",
+            preview:"A child moves through the unusual, bitterly cold Buenos Aires summer of 1964, taking odd jobs to feed his mother.",
+            headings:["Synopsis","Selected Excerpts"],
+            paragraphs:["Vicente is a child from a poor family who tries to save every cent he can in order to survive. After gathering his fears and coins, he visits a bakery early in the morning to buy his mother a vigilante—a pastry filled with custard—while she lies bedridden and utterly silent in the darkness of her room. Throughout the day he wanders the city doing precarious work, sustained only by the thought that in a few days he will be able to buy another sweet."] ,
+            quotes:["No summer was ever as cold as that of '64.","Vicente ate voraciously beneath the woman's watchful gaze. She did not ask why he was not at school; there was no need. With the lucidity that only misfortune can grant, she understood that necessity leaves no room for choice.","Buenos Aires, vast and exhausted, welcomed him with the smell of freshly baked bread that led him to the corner bakery. [...] He spent the rest of the day wandering through the city, deliberately losing himself in a city that lent itself to getting lost.","Then she fell sideways with a dry sound. He did not scream. Something dark began to spread across the floor and reached his shoe. He bent his knees, but did not dare touch the ground. He could only see his mother's gaunt body, her eyes open. He wanted to embrace her ribs, but they seemed so fragile. The next morning Buenos Aires continued on, indifferent. The boy continued with it."]
+        },
+        {
+            subtitle:"On The Addiction (1995) by Abel Ferrara",
+            preview:"An analysis of vampirism, Christianity, and redemption.",
+            headings:["Thesis","Selected Excerpts"],
+            paragraphs:["Against the tradition of the vampire as an archaic threat, Ferrara presents his protagonist as a product of modernity itself: a cornered subject whose reason is devoured by impulse, while Christian faith emerges as the only framework through which guilt can be accepted. The film thus poses an uncomfortable truth: if evil is a constitutive condition of the human being, willpower is insufficient, and redemption can only be reached through the absolute renunciation of one's own identity."],
+            quotes:["The need for blood is not a vice that introduces evil, but the awakening of a tendency toward evil inherent in humanity: we are not sinners because we sin; we sin because we are sinners.","Kathleen searches the thought of Husserl, Nietzsche, and Heidegger for an answer to the problem of evil, but finds none. Reason inevitably ends up devoured by impulse.","While the traditional vampire consumes blood to prolong an earthly existence, the Christian vampire demands the annihilation of the self. The only way to satisfy that addiction is total submission to faith."]
+        },
+        {
+            subtitle:"Ornament as Content in the Cinema of Vincente Minnelli",
+            preview:"An analysis of the formal operations of several of Minnelli's comedies, dramas, and musicals.",
+            headings:["Thesis","Selected Excerpts"],
+            paragraphs:["Minnelli subverts the tradition of relegating visual design to a subsidiary role by turning physical space into a direct extension of the human mind. His kinetic cinema demonstrates that aesthetics are a form of ethics, and that artifice becomes the only genuinely authentic territory."],
+            quotes:["Art criticism has historically prioritized content over form, a tradition later inherited by film criticism, which relegated visual design to a merely subsidiary role. Against this consensus, Vincente Minnelli emerged as a highly disruptive figure.","It is precisely within that apparent superficiality that his greatest depth lies. In Minnelli, cinematic form exposes the irresolvable tension between the individual and their surroundings, making spatial composition and chromatic saturation proof that reality and artifice coexist in a continuous flow.","Abstract sets and theatrical lighting do not operate as decoration, but as substitutes for a reality whose material plane is insufficient to contain the intensity of the psyche. Artifice therefore becomes the only truly genuine territory: a space where the unconscious emancipates itself from social order and ornament triumphs over the crude literalness of a morally empty world."]
+        },
+        {
+            subtitle:"Short Fiction",
+            preview:"Seeking to escape the constraints of her life, Ornella finds in the confessional a profane passion that will challenge both her faith and that of a tormented priest.",
+            headings:["Synopsis","Selected Excerpts"],
+            paragraphs:["Ornella escapes the oppression of school and family by taking refuge in books at the plaza and in local masses. Her brother—and future fiancé by family arrangement—Damián relentlessly pursues her romantically, but it is her chance encounters with the priest in the confessional and during the liturgy that trigger a mutual and forbidden fascination."],
+            quotes:["The fountain water grew slightly clouded, distorting the reflection of sweet Ornella as she contemplated the new moles with which Hebe had adorned her pale face.","Who could blame him, considering how much the young woman shone, seeing how her body embodied a baroque melancholy? What use was there in restraining his temptations in a world already wounded? What harm could a single lapse cause when judgment seemed to have abandoned the earth?","August became November, winter became spring, but fertility remained held hostage by the greed of death. On that cloudy day, barely blessed by a patch of sunlight, the rain of rice engulfed Ornella, who remained standing only through the firm pressure of her brother—now husband—against her lower back.","For Oriana could wrap herself even in the skin of her true beloved, but she could never imitate her expression, nor her voice like fragile waves breaking upon the shore, nor the candor she had so graciously offered him, and which he had grotesquely profaned.","Blessed be this daughter of Cain who will never be canonized; who dreams too much and sleeps too little, and searches for God everywhere, never receiving an answer from the other side."]
+        },
+        {
+            subtitle:"On Amores perros (2000) by Alejandro González Iñárritu",
+            preview:"A sociological analysis based on Marxist theories of structural determinism.",
+            headings:["Thesis","Selected Excerpts"],
+            paragraphs:["The tripartite structure and staging choices of Amores perros materialize Marxist theories of structural determinism. Reading the film as a cultural document exposes the experience of Mexico City at the end of the century, placing the promises of modernity under tension. In a context of profound spatial segregation, violence emerges as the only unifying axis of a social fabric fragmented by capital, dismantling the illusion of meritocracy and social mobility."],
+            quotes:["Crime is, in reality, the only possible response to the closure of the formal market, forcing the characters to return to society the same violence their own environment inflicts upon them.","The crash is literally the collision of social classes: the instant when periphery and center collide, breaking a spatial segregation in an inevitably violent and tragic outcome.","The film's conclusion is sadly equitable: amorality, transgression of the law, and the urgency of survival cut across the entire social pyramid."]
+        },
+        {
+            subtitle:"On Out of the Blue (1980) by Dennis Hopper",
+            preview:"An analysis based on Wilde's stages of life and how the film dynamites them.",
+            headings:["Thesis","Selected Excerpts"],
+            paragraphs:["Against Oscar Wilde's proposed natural progression toward forgiving one's parents, Out of the Blue subverts the coming-of-age genre. In a world where childhood is stolen through abuse and neglect, the subject's only possible culmination is not forgiveness, but total destruction."],
+            quotes:["The family's self-deception in waiting for the father after his release from prison is the closest Cebe comes to childhood. Yet his return only confirms the depravity of an environment operating under the community's complicit or indifferent gaze.","Cebe never has the opportunity to forgive her parents, because she is constantly forced to defend herself against those who were supposed to keep her safe, an abandonment that precipitates her premature death.","In a final act of destruction, she chooses to die strictly on her own terms, in the same world that had already condemned her."]
+        }
+    ];
+
+    const skills = [
+        "Screenwriting (feature films and short films)",
+        "Storytelling, Narrative Structure & Beat Sheets",
+        "Character Design & Development",
+        "Literary & Stage Adaptation",
+        "Dialogue Writing",
+        "Film Analysis & Criticism",
+        "Fiction & Essay Writing",
+        "Project Analysis, Reading & Evaluation",
+        "Project Rewriting",
+        "Knowledge of Standard Screenplay Format",
+        "Final Draft & KIT Scenarist"
+    ];
+
+    const ui = {
+        es:{
+            heroLabel:"GUIONISTA · ESCRITORA",
+            heroDesc:"Guionista joven interesada en la escritura, tanto en ficción cinematográfica y narrativa como en ensayos y críticas.",
+            heroQuote:"Historias sobre lo íntimo,<br>lo inquietante y lo humano.",
+            heroNote:"FICCIÓN · TERROR CONTEMPORÁNEO · DRAMA PSICOLÓGICO",
+            explore:"EXPLORAR", portfolio:"Ver portfolio",
+            aboutTitle:"Sobre mí", aboutLabel:"GUIONISTA · ESCRITORA",
+            aboutHeading:"Exploraciones de la fragilidad,<br>lo perverso y aquello<br>que permanece oculto.",
+            age:"EDAD", origin:"ORIGEN", education:"FORMACIÓN", area:"ÁREA", areaValue:"Guion Cinematográfico",
+            aboutP:[
+                "Soy estudiante de Guion Cinematográfico en la Universidad del Cine (FUC) y escritora argentina de 19 años. Aunque mi formación central es el guion, concibo la escritura de forma integral: me apasiona explorar la narrativa desde la ficción cinematográfica, la prosa y el ensayo.",
+                "Mi trabajo busca explorar los vínculos humanos, la memoria y los conflictos internos, con un marcado interés en el terror contemporáneo y el drama psicológico. Actualmente me encuentro en una etapa avanzada de escritura de mi primer largometraje, y en etapa inicial del segundo. En paralelo, he desarrollado ensayos, críticas de cine, cortometrajes y narrativa breve.",
+                "Busco construir historias que generen inquietud a través de la atmósfera, la tensión psicológica y el silencio, priorizando la complejidad interna de los personajes por sobre el impacto inmediato. Entiendo la escritura como una investigación constante, una oportunidad para experimentar con el lenguaje y explorar esa frontera donde lo íntimo y lo perturbador conviven hasta volverse indistinguibles."
+            ],
+            interests:["TERROR CONTEMPORÁNEO","DRAMA OSCURO","REALISMO MÁGICO","ENRARECIMIENTO","LÍMITES DE LA REALIDAD","DUELO Y CULPA"],
+            scriptsTitle:"Guiones", synopsis:"SINOPSIS", close:"Cerrar", readMore:"Leer más", watch:"▶ Ver cortometraje",
+            writtenTitle:"Obra escrita", writtenSubtitle:"Narrativa breve, crítica y ensayo cinematográfico.",
+            writtenTypes:["CUENTO","CRÍTICA","ENSAYO","CUENTO","CRÍTICA","CRÍTICA"],
+            writtenHeadings:["Sinopsis","Fragmentos destacados"],
+            skillsTitle:"Habilidades",
+            footerKicker:"PORTFOLIO DE ESCRITURA", footerRole:"Guionista · Narradora · Crítica cinematográfica", contact:"CONTACTO",
+            availability:"Disponible para desarrollo de proyectos cinematográficos, escritura y colaboraciones.", back:"Volver al inicio ↑"
+        },
+        en:{
+            heroLabel:"SCREENWRITER · WRITER",
+            heroDesc:"Young screenwriter interested in writing across cinematic and literary fiction, as well as essays and film criticism.",
+            heroQuote:"Stories about intimacy,<br>unease, and the human condition.",
+            heroNote:"FICTION · CONTEMPORARY HORROR · PSYCHOLOGICAL DRAMA",
+            explore:"EXPLORE", portfolio:"View portfolio",
+            aboutTitle:"About", aboutLabel:"SCREENWRITER · WRITER",
+            aboutHeading:"Explorations of fragility,<br>the perverse, and that<br>which remains hidden.",
+            age:"AGE", origin:"ORIGIN", education:"EDUCATION", area:"FIELD", areaValue:"Screenwriting",
+            aboutP:[
+                "I am a 19-year-old Argentine screenwriting student at Universidad del Cine (FUC) and a writer. Although screenwriting is at the center of my training, I approach writing as an integral practice, with a particular interest in cinematic fiction, prose, and the essay.",
+                "My work explores human relationships, memory, and inner conflict, with a strong interest in contemporary horror and psychological drama. I am currently at an advanced stage of writing my first feature film and at the early stage of developing a second. Alongside this, I have developed essays, film criticism, short films, and short fiction.",
+                "I seek to create stories that generate unease through atmosphere, psychological tension, and silence, prioritizing the inner complexity of characters over immediate impact. I understand writing as an ongoing investigation: an opportunity to experiment with language and explore the boundary where intimacy and the disturbing coexist until they become indistinguishable."
+            ],
+            interests:["CONTEMPORARY HORROR","DARK DRAMA","MAGICAL REALISM","THE UNCANNY","THE BOUNDARIES OF REALITY","GRIEF & GUILT"],
+            scriptsTitle:"Screenplays", synopsis:"SYNOPSIS", close:"Close", readMore:"Read more", watch:"▶ Watch short film",
+            writtenTitle:"Written Work", writtenSubtitle:"Short fiction, film criticism, and essays.",
+            writtenTypes:["SHORT FICTION","CRITICISM","ESSAY","SHORT FICTION","CRITICISM","CRITICISM"],
+            writtenHeadings:["Synopsis","Selected Excerpts"],
+            skillsTitle:"Skills",
+            footerKicker:"WRITING PORTFOLIO", footerRole:"Screenwriter · Narrator · Film Critic", contact:"CONTACT",
+            availability:"Available for film development, writing projects, and collaborations.", back:"Back to top ↑"
+        }
+    };
+
+    let currentLang = "es";
+
+    const text = (selector, value, html=false) => {
+        const el = document.querySelector(selector);
+        if(!el) return;
+        if(html) el.innerHTML = value;
+        else el.textContent = value;
+    };
+
+    const setOriginal = (el) => {
+        if(!el.dataset.originalHtml) el.dataset.originalHtml = el.innerHTML;
+    };
+
+    function translateProjects(lang){
+        const cards = document.querySelectorAll('#scripts .card');
+        cards.forEach((card,index)=>{
+            const t = projectTranslations[index];
+            if(!t) return;
+            const genre = card.querySelector('.genre');
+            const badge = card.querySelector('.badge');
+            const status = card.querySelector('.status-badge');
+            const synopsis = card.querySelector('.hidden p');
+            if(lang === 'en'){
+                if(genre){ setOriginal(genre); genre.textContent=t.genre; }
+                if(badge){ setOriginal(badge); badge.textContent=t.badge; }
+                if(status){ setOriginal(status); status.textContent=t.status; }
+                if(synopsis){ setOriginal(synopsis); synopsis.textContent=t.synopsis; }
+                const watch=card.querySelector('.watch-button');
+                if(watch && t.watch){ setOriginal(watch); watch.textContent=t.watch; }
+            } else {
+                [genre,badge,status,synopsis,card.querySelector('.watch-button')].forEach(el=>{
+                    if(el && el.dataset.originalHtml !== undefined) el.innerHTML=el.dataset.originalHtml;
+                });
+            }
+        });
+    }
+
+    function translateWritten(lang){
+        const cards = document.querySelectorAll('.library-card');
+        cards.forEach((card,index)=>{
+            const t=writtenTranslations[index];
+            if(!t) return;
+            const subtitle=card.querySelector('.card-subtitle');
+            const preview=card.querySelector('.card-preview');
+            const headings=card.querySelectorAll('.card-content h4');
+            const paragraphs=card.querySelectorAll('.card-content > p');
+            const quotes=card.querySelectorAll('.quote-card');
+            const label=card.querySelector('.card-label');
+            const button=card.querySelector('.expand-btn');
+            if(lang==='en'){
+                if(label){ setOriginal(label); label.textContent=ui.en.writtenTypes[index]; }
+                if(subtitle){ setOriginal(subtitle); subtitle.innerHTML=t.subtitle; }
+                if(preview){ setOriginal(preview); preview.textContent=t.preview; }
+                headings.forEach((h,i)=>{ setOriginal(h); h.textContent=t.headings[i] || ui.en.writtenHeadings[i] || h.textContent; });
+                paragraphs.forEach((p,i)=>{ if(t.paragraphs[i]!==undefined){ setOriginal(p); p.textContent=t.paragraphs[i]; }});
+                quotes.forEach((q,i)=>{ if(t.quotes[i]!==undefined){ setOriginal(q); q.textContent='«'+t.quotes[i]+'»'; }});
+                if(button){ setOriginal(button); button.textContent=card.classList.contains('open')?ui.en.close:ui.en.readMore; }
+            } else {
+                [label,subtitle,preview,...headings,...paragraphs,...quotes,button].forEach(el=>{
+                    if(el && el.dataset.originalHtml!==undefined) el.innerHTML=el.dataset.originalHtml;
+                });
+            }
+        });
+    }
+
+    function setLanguage(lang){
+        currentLang=lang;
+        const t=ui[lang];
+        document.documentElement.lang=lang;
+        document.body.classList.toggle('english',lang==='en');
+
+        document.querySelectorAll('[data-i18n]').forEach(el=>{
+            const key=el.dataset.i18n;
+            if(translations[lang][key]) el.textContent=translations[lang][key];
+        });
+
+        text('.hero-label',t.heroLabel);
+        text('.hero-description p',t.heroDesc);
+        text('.hero-description span',t.heroQuote,true);
+        text('.hero-note',t.heroNote);
+        text('.scroll-indicator span:first-child',t.explore);
+        text('.hero-content > button',t.portfolio);
+        text('#about .section-title',t.aboutTitle);
+        text('.about-label',t.aboutLabel);
+        text('.about-intro h3',t.aboutHeading,true);
+
+        const meta=document.querySelectorAll('.meta-item');
+        if(meta[0]) meta[0].querySelector('span').textContent=t.age;
+        if(meta[1]) meta[1].querySelector('span').textContent=t.origin;
+        if(meta[2]) meta[2].querySelector('span').textContent=t.education;
+        if(meta[3]){ meta[3].querySelector('span').textContent=t.area; meta[3].querySelector('strong').textContent=t.areaValue; }
+
+        document.querySelectorAll('.about-text p').forEach((p,i)=>{ if(t.aboutP[i]) p.textContent=t.aboutP[i]; });
+        document.querySelectorAll('.about-interests span').forEach((el,i)=>{ if(t.interests[i]) el.textContent=t.interests[i]; });
+
+        text('#scripts .section-title',t.scriptsTitle);
+        document.querySelectorAll('#scripts .hidden p').forEach(p=>{
+            p.dataset.synopsisLabel=t.synopsis;
+            p.style.setProperty('--synopsis-label','"'+t.synopsis+'"');
+        });
+        document.querySelectorAll('.watch-button').forEach(btn=>{
+            const index=[...document.querySelectorAll('#scripts .card')].indexOf(btn.closest('.card'));
+            const pt=projectTranslations[index];
+            if(lang==='en' && pt && pt.watch) btn.textContent=pt.watch;
+            else if(lang==='es') btn.innerHTML=btn.dataset.originalHtml || '▶ Ver cortometraje';
+        });
+        document.querySelectorAll('.expand-btn').forEach(btn=>{
+            btn.textContent=btn.closest('.library-card')?.classList.contains('open') ? t.close : t.readMore;
+        });
+        text('#stories .section-title',t.writtenTitle);
+        text('#stories .section-subtitle',t.writtenSubtitle);
+        translateProjects(lang);
+        translateWritten(lang);
+        text('#skills .section-title',t.skillsTitle);
+        document.querySelectorAll('.skill').forEach((el,i)=>{
+            if(lang==='en'){
+                if(!el.dataset.originalHtml) el.dataset.originalHtml=el.innerHTML;
+                el.textContent=skills[i];
+            } else if(el.dataset.originalHtml!==undefined) el.innerHTML=el.dataset.originalHtml;
+        });
+        text('.footer-kicker',t.footerKicker);
+        text('.footer-role',t.footerRole);
+        text('.footer-label',t.contact);
+        text('.footer-availability',t.availability);
+        text('.footer-back',t.back);
+
+        const toggle=document.getElementById('languageToggle');
+        if(toggle){
+            toggle.textContent=lang==='es'?'EN':'ES';
+            toggle.setAttribute('aria-label',lang==='es'?'Switch to English':'Cambiar a español');
+            toggle.title=lang==='es'?'English version':'Versión en español';
+        }
+
+        localStorage.setItem('portfolioLanguage',lang);
+
+        if(typeof startPortfolioTyping === "function"){
+            startPortfolioTyping(lang);
+        }
+    }
+
+    // Preserve the original Spanish HTML before the first language switch.
+    document.querySelectorAll('.genre,.badge,.status-badge,.watch-button,.card-label,.card-subtitle,.card-preview,.card-content h4,.card-content > p,.quote-card,.expand-btn,.skill').forEach(setOriginal);
+
+    const synopsisStyle=document.createElement('style');
+    synopsisStyle.textContent='#scripts .hidden p::before{content:var(--synopsis-label,"SINOPSIS");}';
+    document.head.appendChild(synopsisStyle);
+
+    const toggle=document.getElementById('languageToggle');
+    if(toggle) toggle.addEventListener('click',()=>setLanguage(currentLang==='es'?'en':'es'));
+
+    const saved=localStorage.getItem('portfolioLanguage');
+    setLanguage(saved==='en'?'en':'es');
+})();
+</script>
+
 </body>
 </html>
